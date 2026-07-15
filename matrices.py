@@ -206,7 +206,8 @@ class Matrix:
 
 def identity(size):
 
-    size = int(size)
+    if not isinstance(size, int):
+        raise ValueError("Matrices may only have integer dimensions.")
 
     result = []
     middle = []
@@ -219,4 +220,20 @@ def identity(size):
                 middle.append(0)
         result.append(middle)
         middle = []
+    return Matrix(result)
+
+def zero(height, width):
+
+    if not isinstance((height, width), int):
+        raise ValueError("Matrices may only have integer dimensions.")
+
+    result = []
+    middle = []
+
+    for i in range(height):
+        for j in range(width):
+            middle.append(0)
+        result.append(middle)
+        middle = []
+    
     return Matrix(result)
