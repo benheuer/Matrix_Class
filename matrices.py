@@ -63,7 +63,9 @@ class Matrix:
                 yield self.data[i][k]
 
     def __getitem__(self, index):
-        return self.data[index]
+        if not isinstance(index,int):
+            raise TypeError("Matrix indecies may only be integers.")
+        return self.data[index//self.dimensions[0]][index%self.dimensions[0]]
 
     def __add__(self,other):
 
@@ -105,46 +107,42 @@ class Matrix:
         return Matrix(result)
 
     def __mul__(self, other):
-        try:
-            if not isinstance(other, Matrix) and not isinstance(other,(float,int)):
-                raise TypeError("Matrices may only be multiplied by other matrices or a scalar")
+        if not isinstance(other, Matrix) and not isinstance(other,(float,int)):
+            raise TypeError("Matrices may only be multiplied by other matrices or a scalar")
 
-            if isinstance(other,Matrix):
-                if self.dimensions()[1] != other.dimensions()[0]:
-                    raise ValueError("Invalid dimensions")
+        if isinstance(other,Matrix):
+            if self.dimensions()[1] != other.dimensions()[0]:
+                raise ValueError("Invalid dimensions")
 
-                rows = self.dimensions()[0]
-                cols = other.dimensions()[1]
-                inner = self.dimensions()[1]
+            rows = self.dimensions()[0]
+            cols = other.dimensions()[1]
+            inner = self.dimensions()[1]
 
-                result = []
+            result = []
 
-                for i in range(rows):
-                    row = []
-                    for j in range(cols):
-                        value = 0
-                        for k in range(inner):
-                            value += self.data[i][k] * other.data[k][j]
-                        row.append(value)
-                    result.append(row)
+            for i in range(rows):
+                row = []
+                for j in range(cols):
+                    value = 0
+                    for k in range(inner):
+                        value += self.data[i][k] * other.data[k][j]
+                    row.append(value)
+                result.append(row)
 
-            if isinstance(other,(float,int)):
-                row_count = self.dimensions()[0]
-                element_count = len(self.data[0])
+        if isinstance(other,(float,int)):
+            row_count = self.dimensions()[0]
+            element_count = len(self.data[0])
 
-                result = []
+            result = []
 
-                for i in range(row_count):
-                    row = []
-                    for j in range(element_count):
-                        value = self.data[i][j] * other
-                        row.append(value)
-                    result.append(row)
+            for i in range(row_count):
+                row = []
+                for j in range(element_count):
+                    value = self.data[i][j] * other
+                    row.append(value)
+                result.append(row)
 
-            return Matrix(result)
-
-        except Exception:
-            raise Exception("An error occured when multiplying.")
+        return Matrix(result)
 
     def __truediv__(self,other):
 
