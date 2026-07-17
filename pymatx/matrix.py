@@ -205,7 +205,7 @@ class Matrix:
 
         """Uses Gauss-Jordan Elimination to procedurally generate the inverse of a matrix"""
 
-        error_bar = 1e12
+        error_bar = 1-e12
 
         if self.dimensions()[0] != self.dimensions()[1]:
             raise ValueError("Cannot invert a non-square matrix")
@@ -249,29 +249,27 @@ class Matrix:
         return result
 
     def _gauss_jordan(self, companion = None):
-        error_bar = 1e12
+        error_bar = 1e-12
 
         size = self.dimensions()[0]
 
         clone = Matrix([[x for x in row] for row in self.data])
 
         if companion is not None:
-            coclone = Matrix([...])
+            coclone = Matrix([[x for x in row] for row in companion.data])
         else:
             coclone = None
 
         for i in range(size):
             if abs(clone.data[i][i]) > error_bar:
-            if clone.data[i][i] == 0:
                 pass
             else:
                 for k in range(size-i):
                     if abs(clone.data[i+k][i]) > error_bar:
-                    if clone.data[i+k][i] == 0:
                         duplicator_clone = clone.data[i+k]
                         clone.data[i+k] = clone.data[i]
                         clone.data[i] = duplicator_clone
-                        if not coclone == None:
+                        if coclone is not None:
                             duplicator_coclo = coclone.data[i+k]
                             coclone.data[i+k] = coclone.data[i]
                             coclone.data[i] = duplicator_coclo
@@ -281,18 +279,17 @@ class Matrix:
             pivot = clone.data[i][i]
             for j in range(len(clone.data[i])):
                 clone.data[i][j] = clone.data[i][j]/pivot
-                if not coclone == None:
+                if coclone is not None:
                     coclone.data[i][j] = coclone.data[i][j]/pivot
 
             for n in range(size):
                 if n == i:
                     pass
                 elif abs(clone.data[n][i]) > error_bar:
-                elif clone.data[n][i]:
                     scalar = clone.data[n][i]
                     for m in range(size):
                         clone.data[n][m] -= scalar * clone.data[i][m]
-                        if not coclone == None:
+                        if coclone is not None:
                             coclone.data[n][m] -= scalar * coclone.data[i][m]
 
         return clone, coclone
